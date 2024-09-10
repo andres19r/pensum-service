@@ -3,6 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const subjectSchema = new mongoose.Schema({
   code: {
     type: String,
+    unique: true,
     required: [true, "Code is required"],
   },
   name: {
@@ -17,6 +18,7 @@ const subjectSchema = new mongoose.Schema({
   },
   score: {
     type: Number,
+    default: 0,
   },
   semester: {
     type: Schema.Types.ObjectId,
