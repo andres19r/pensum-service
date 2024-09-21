@@ -6,10 +6,10 @@ export class PensumRoutes {
     const router = Router();
     const controller = new PensumController();
 
-    router.get('/', controller.getPensumInfo)
-    router.post('/', controller.createPensum)
-    router.put('/:id', controller.updatePensum)
-    router.delete('/:id', controller.deletePensum)
+    router.get("/", controller.getPensumInfo);
+    router.post("/", controller.createPensum);
+    router.put("/:id", controller.updatePensum);
+    router.delete("/:id", controller.deletePensum);
 
     return router;
   }
