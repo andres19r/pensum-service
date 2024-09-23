@@ -10,6 +10,7 @@ export class CreateSemesterDto {
     const { num, pensumId } = props;
 
     if (!num) return ["Missing num"];
+    if (!pensumId) return ["Missing pensumId"];
     if (!Validators.isMongoID(pensumId)) return ["Invalid Pensum ID"];
 
     return [undefined, new CreateSemesterDto(num, pensumId)];
