@@ -26,19 +26,23 @@ export class SemesterController {
     const [error, createSemesterDto] = CreateSemesterDto.create(req.body);
     if (error) return res.status(400).json({ error });
 
-    const semester = await SemesterModel.create(createSemesterDto);
-
-    const pensum = await PensumModel.findById(createSemesterDto?.pensumId);
-    if (!pensum)
-      return res.status(400).json({
-        error: `Pensum with id ${createSemesterDto?.pensumId} not found`,
-      });
-    semester.pensum = pensum._id;
-    pensum.semesters.push(semester._id);
-    await pensum.save();
-    await semester.save();
-
-    res.json(semester);
+    try {
+      const semester = new SemesterModel(createSemesterDto);
+      const updatedPensum = await PensumModel.findOneAndUpdate(
+        { _id: createSemesterDto?.pensumId },
+        {
+          $push: { semesters: semester._id },
+        },
+      );
+      if (!updatedPensum)
+        return res.status(400).json({
+          error: `Pensum with id ${createSemesterDto?.pensumId} not found`,
+        });
+      await semester.save();
+      res.json(semester);
+    } catch (error) {
+      return res.status(500).json({ error: "Something went wrong" });
+    }
   };
 
   updateSemester = async (req: Request, res: Response) => {};
