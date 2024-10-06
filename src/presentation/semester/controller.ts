@@ -49,8 +49,8 @@ export class SemesterController {
 
   deleteSemester = async (req: Request, res: Response) => {
     const id = req.params.id;
-    const deletedSemester = await SemesterModel.findByIdAndDelete(id);
 
+    const deletedSemester = await SemesterModel.findByIdAndDelete(id);
     if (!deletedSemester)
       return res
         .status(404)

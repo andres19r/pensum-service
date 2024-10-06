@@ -16,12 +16,14 @@ export class PensumController {
 
     const pensumExists = await PensumModel.findOne({
       $or: [
-        {career: createPensumDto?.career},
-        {university: createPensumDto?.university}
-      ]
-    })
+        { career: createPensumDto?.career },
+        { university: createPensumDto?.university },
+      ],
+    });
     if (pensumExists)
-      return res.status(400).json({error: `Pensum with ${JSON.stringify(createPensumDto)} already exists`})
+      return res.status(400).json({
+        error: `Pensum with ${JSON.stringify(createPensumDto)} already exists`,
+      });
 
     const pensum = await PensumModel.create(createPensumDto);
     await pensum.save();
@@ -34,10 +36,11 @@ export class PensumController {
 
   deletePensum = async (req: Request, res: Response) => {
     const id = req.params.id;
-    const deletedPensum = await PensumModel.findByIdAndDelete(id);
 
+    const deletedPensum = await PensumModel.findByIdAndDelete(id);
     if (!deletedPensum)
       return res.status(404).json({ error: `Pensum with id ${id} not found` });
+
     res.json(deletedPensum);
   };
 }
