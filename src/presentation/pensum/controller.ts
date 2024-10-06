@@ -14,6 +14,15 @@ export class PensumController {
     const [error, createPensumDto] = CreatePensumDto.create(req.body);
     if (error) return res.status(400).json({ error });
 
+    const pensumExists = await PensumModel.findOne({
+      $or: [
+        {career: createPensumDto?.career},
+        {university: createPensumDto?.university}
+      ]
+    })
+    if (pensumExists)
+      return res.status(400).json({error: `Pensum with ${JSON.stringify(createPensumDto)} already exists`})
+
     const pensum = await PensumModel.create(createPensumDto);
     await pensum.save();
     res.json(pensum);
