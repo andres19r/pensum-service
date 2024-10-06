@@ -15,13 +15,4 @@ const pensumSchema = new mongoose.Schema({
   }]
 })
 
-pensumSchema.set("toJSON", {
-  virtuals: true,
-  versionKey: false,
-  transform: function(doc, ret) {
-    ret.id = ret._id.toString()
-    delete ret._id
-  }
-})
-
 export const PensumModel = mongoose.model("Pensum", pensumSchema)

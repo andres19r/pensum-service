@@ -18,13 +18,4 @@ const semesterSchema = new mongoose.Schema({
   },
 });
 
-semesterSchema.set("toJSON", {
-  virtuals: true,
-  versionKey: false,
-  transform: function (doc, ret) {
-    ret.id = ret._id.toString();
-    delete ret._id;
-  },
-});
-
 export const SemesterModel = mongoose.model("Semester", semesterSchema);

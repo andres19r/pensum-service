@@ -26,13 +26,4 @@ const subjectSchema = new mongoose.Schema({
   },
 });
 
-subjectSchema.set("toJSON", {
-  virtuals: true,
-  versionKey: false,
-  transform: function (doc, ret) {
-    ret.id = ret._id.toString();
-    delete ret._id;
-  },
-});
-
 export const SubjectModel = mongoose.model("Subject", subjectSchema);
