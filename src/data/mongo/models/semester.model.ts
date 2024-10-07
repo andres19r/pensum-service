@@ -11,7 +11,7 @@ const semesterSchema = new mongoose.Schema({
       ref: "Subject",
     },
   ],
-  pensum: {
+  pensumId: {
     type: Schema.Types.ObjectId,
     ref: "Pensum",
   },

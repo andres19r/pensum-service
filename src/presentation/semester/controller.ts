@@ -7,7 +7,7 @@ export class SemesterController {
   constructor() {}
 
   getSemesters = async (req: Request, res: Response) => {
-    const semesters = await SemesterModel.find().populate("pensum");
+    const semesters = await SemesterModel.find();
     res.json(semesters);
   };
 
