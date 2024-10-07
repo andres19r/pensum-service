@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { SemesterModel } from "../../data/mongo/models/semester.model";
-import { CreateSemesterDto } from "../../domain/dtos/semester/create-semester.dto";
 import { PensumModel } from "../../data/mongo/models/pensum.model";
+import { CreateSemesterDto, UpdateSemesterDto } from "../../domain/dtos";
 
 export class SemesterController {
   constructor() {}
 
   getSemesters = async (req: Request, res: Response) => {
-    const semesters = await SemesterModel.find();
+    const semesters = await SemesterModel.find().populate("pensum");
     res.json(semesters);
   };
 
@@ -28,11 +28,12 @@ export class SemesterController {
 
     try {
       const semester = new SemesterModel(createSemesterDto);
-      const updatedPensum = await PensumModel.findOneAndUpdate(
-        { _id: createSemesterDto?.pensumId },
+      const updatedPensum = await PensumModel.findByIdAndUpdate(
+        createSemesterDto?.pensumId,
         {
           $push: { semesters: semester._id },
         },
+        { new: true },
       );
       if (!updatedPensum)
         return res.status(400).json({
@@ -40,12 +41,32 @@ export class SemesterController {
         });
       await semester.save();
       res.json(semester);
-    } catch (error) {
-      return res.status(500).json({ error: "Something went wrong" });
+    } catch (error: any) {
+      console.error(error);
+      return res.status(500).json({ error: error.errmsg });
     }
   };
 
-  updateSemester = async (req: Request, res: Response) => {};
+  updateSemester = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const [error, updateSemesterDto] = UpdateSemesterDto.create(req.body);
+    if (error) return res.status(400).json({ error });
+
+    const modifiedSemester = await SemesterModel.findByIdAndUpdate(
+      id,
+      { $set: updateSemesterDto?.values },
+      { new: true },
+    );
+
+    if (!modifiedSemester)
+      return res
+        .status(404)
+        .json({ error: `Semester with id ${id} not found` });
+
+    // TODO: implement logic to update pensumId
+
+    res.json(modifiedSemester);
+  };
 
   deleteSemester = async (req: Request, res: Response) => {
     const id = req.params.id;

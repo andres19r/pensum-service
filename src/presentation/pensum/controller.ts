@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PensumModel } from "../../data/mongo/models/pensum.model";
-import { CreatePensumDto } from "../../domain/dtos/pensum/create-pensum.dto";
+import { CreatePensumDto, UpdatePensumDto } from "../../domain/dtos";
 
 export class PensumController {
   constructor() {}
@@ -30,8 +30,19 @@ export class PensumController {
     res.json(pensum);
   };
 
-  updatePensum = (req: Request, res: Response) => {
-    res.json("updatePensum");
+  updatePensum = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const updatePensumDto = UpdatePensumDto.create(req.body);
+
+    const modifiedPensum = await PensumModel.findByIdAndUpdate(
+      id,
+      { $set: updatePensumDto.values },
+      { new: true },
+    );
+    if (!modifiedPensum)
+      return res.status(400).json({ error: `Pensum with id ${id} not found` });
+
+    res.json(modifiedPensum);
   };
 
   deletePensum = async (req: Request, res: Response) => {
