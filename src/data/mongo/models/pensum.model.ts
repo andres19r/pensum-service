@@ -11,9 +11,9 @@ const pensumSchema = new mongoose.Schema({
     unique: true,
     required: [true, "University is required"]
   },
-  semesters: [{
+  subjects: [{
     type: Schema.Types.ObjectId,
-    ref: "Semester",
+    ref: "Subject",
   }]
 })
 

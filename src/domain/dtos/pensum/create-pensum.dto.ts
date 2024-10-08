@@ -8,7 +8,7 @@ export class CreatePensumDto {
     const { career, university } = props;
 
     if (!career) return ["Career property is required"];
-    if (!university) return ["Career property is required"];
+    if (!university) return ["University property is required"];
 
     return [undefined, new CreatePensumDto(career, university)];
   }

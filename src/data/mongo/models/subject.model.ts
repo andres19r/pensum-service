@@ -1,28 +1,23 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
 const subjectSchema = new mongoose.Schema({
-  code: {
-    type: String,
-    unique: true,
-    required: [true, "Code is required"],
-  },
   name: {
     type: String,
+    unique: true,
     required: [true, "Name is required"],
   },
   state: {
     type: String,
-    default: "Not taken",
-    enum: ["Not taken", "In progress", "Approved", "Reproved"],
+    default: "Pending",
+    enum: ["Pending", "In progress", "Approved", "Reproved"],
     required: true,
+  },
+  semester: {
+    type: Number,
+    required: [true, "Semester is required"],
   },
   score: {
     type: Number,
-    default: 0,
-  },
-  semester: {
-    type: Schema.Types.ObjectId,
-    ref: "Semester",
   },
 });
 
