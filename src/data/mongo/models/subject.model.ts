@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const subjectSchema = new mongoose.Schema({
   name: {
@@ -18,6 +18,10 @@ const subjectSchema = new mongoose.Schema({
   },
   score: {
     type: Number,
+  },
+  pensumId: {
+    type: Schema.Types.ObjectId,
+    ref: "Pensum",
   },
 });
 
