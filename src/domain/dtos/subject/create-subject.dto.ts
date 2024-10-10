@@ -2,19 +2,26 @@ import { Validators } from "../../../config/validators";
 
 export class CreateSubjectDto {
   private constructor(
-    public readonly code: string,
     public readonly name: string,
-    public readonly semesterId: string,
+    public readonly semester: number,
+    public readonly pensumId: string,
+    public readonly score?: number,
+    public readonly state?: string,
   ) {}
 
   static create(props: { [key: string]: any }): [string?, CreateSubjectDto?] {
-    const { code, name, semesterId } = props;
+    const { name, semester, score, pensumId, state } = props;
 
-    if (!code) return ["Missing code"];
     if (!name) return ["Missing name"];
-    if (!semesterId) return ["Missing semesterId"];
-    if (!Validators.isMongoID(semesterId)) return ["Invalid semester ID"];
+    // TODO: check if state is a value from enum
+    if (!semester) return ["Missing semester"];
+    if (score && isNaN(score)) return ["Score shold be a number"];
+    if (!pensumId) return ["Missing pensumId"];
+    if (!Validators.isMongoID(pensumId)) return ["Invalid pensum ID"];
 
-    return [undefined, new CreateSubjectDto(code, name, semesterId)];
+    return [
+      undefined,
+      new CreateSubjectDto(name, semester, pensumId, score, state),
+    ];
   }
 }
