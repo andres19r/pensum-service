@@ -1,5 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 
+export enum SubjectState {
+  Approved = "APPROVED",
+  InProgress = "IN_PROGRESS",
+  Pending = "PENDING",
+  Reproved = "REPROVED",
+}
+
 const subjectSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -8,8 +15,8 @@ const subjectSchema = new mongoose.Schema({
   },
   state: {
     type: String,
-    default: "Pending",
-    enum: ["Pending", "In progress", "Approved", "Reproved"],
+    default: "PENDING",
+    enum: SubjectState,
     required: true,
   },
   semester: {
@@ -26,3 +33,4 @@ const subjectSchema = new mongoose.Schema({
 });
 
 export const SubjectModel = mongoose.model("Subject", subjectSchema);
+
