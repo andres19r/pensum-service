@@ -17,7 +17,7 @@ export class SubjectService {
         },
       );
 
-      const pensum = await PensumModel.findById(newSubject.pensumId)
+      const pensum = await PensumModel.findById(newSubject.pensumId);
       if (!updatedPensum)
         throw CustomError.badRequest(
           `Pensum with id ${createSubjectDto.pensumId} not found`,
@@ -27,5 +27,13 @@ export class SubjectService {
     } catch (error) {
       throw CustomError.internalServer(`${error}`);
     }
+  }
+
+  async getAllSubjects() {
+    return await SubjectModel.find();
+  }
+
+  async getSubjectById(id: string) {
+    return await SubjectModel.findById(id);
   }
 }

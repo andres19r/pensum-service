@@ -16,16 +16,22 @@ export class SubjectController {
   };
 
   findAll = async (req: Request, res: Response) => {
-    return res.json("getAll");
+    this.subjectService
+      .getAllSubjects()
+      .then((subjects) => res.json(subjects))
+      .catch((error) => this.handleError(error, res));
   };
 
   findById = async (req: Request, res: Response) => {
-    return res.json("getById");
+    const { id } = req.params;
+    this.subjectService
+      .getSubjectById(id)
+      .then((subject) => res.json(subject))
+      .catch((error) => this.handleError(error, res));
   };
 
   create = (req: Request, res: Response) => {
     const [error, createSubjectDto] = CreateSubjectDto.create(req.body);
-    console.log(createSubjectDto)
     if (error) return res.status(400).json({ error });
 
     this.subjectService
