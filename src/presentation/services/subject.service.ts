@@ -2,13 +2,19 @@ import { PensumModel } from "../../data/mongo/models/pensum.model";
 import { SubjectModel } from "../../data/mongo/models/subject.model";
 import { CreateSubjectDto } from "../../domain/dtos";
 import { CustomError } from "../../domain/errors/custom-error";
+import { UpdateSubjectDto } from "../../domain/dtos/subject/update-subject.dto";
 
 export class SubjectService {
-  constructor() {}
 
   async createSubject(createSubjectDto: CreateSubjectDto) {
     try {
       const newSubject = new SubjectModel(createSubjectDto);
+
+      const pensum = await PensumModel.findById(newSubject.pensumId);
+      if (!pensum)
+        throw CustomError.badRequest(
+          `Pensum with id ${createSubjectDto.pensumId} not found`,
+        );
 
       const updatedPensum = await PensumModel.findByIdAndUpdate(
         createSubjectDto.pensumId,
@@ -16,12 +22,6 @@ export class SubjectService {
           $push: { subjects: newSubject._id },
         },
       );
-
-      const pensum = await PensumModel.findById(newSubject.pensumId);
-      if (!updatedPensum)
-        throw CustomError.badRequest(
-          `Pensum with id ${createSubjectDto.pensumId} not found`,
-        );
       await newSubject.save();
       return newSubject;
     } catch (error) {
@@ -30,10 +30,27 @@ export class SubjectService {
   }
 
   async getAllSubjects() {
-    return await SubjectModel.find();
+    return SubjectModel.find();
   }
 
   async getSubjectById(id: string) {
-    return await SubjectModel.findById(id);
+    return SubjectModel.findById(id);
+  }
+
+  async modifySubjectById(id: string, updateSubjectDto: UpdateSubjectDto) {
+    const subject = await SubjectModel.findById(id);
+    if (!subject) throw CustomError.notFound(`Subject with id ${id} not found`);
+
+    try {
+      return await SubjectModel.findByIdAndUpdate(id, updateSubjectDto.values, {
+        new: true,
+      });
+    } catch (error) {
+      throw CustomError.internalServer(`${error}`);
+    }
+  }
+
+  async deleteSubject(id: string) {
+    return SubjectModel.findByIdAndDelete(id);
   }
 }

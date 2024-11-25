@@ -8,7 +8,6 @@ const pensumSchema = new mongoose.Schema({
   },
   university: {
     type: String,
-    unique: true,
     required: [true, "University is required"]
   },
   subjects: [{

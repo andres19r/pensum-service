@@ -1,5 +1,3 @@
-import {CreateSubjectDto} from "./create-subject.dto";
-
 export class UpdateSubjectDto {
     private constructor(
         public readonly name?: string,
