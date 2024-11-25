@@ -8,21 +8,20 @@ export class SubjectService {
 
   async createSubject(createSubjectDto: CreateSubjectDto) {
     try {
-      const newSubject = new SubjectModel(createSubjectDto);
+      const newSubject = await SubjectModel.create(createSubjectDto);
 
       const pensum = await PensumModel.findById(newSubject.pensumId);
       if (!pensum)
-        throw CustomError.badRequest(
+        return CustomError.badRequest(
           `Pensum with id ${createSubjectDto.pensumId} not found`,
         );
 
-      const updatedPensum = await PensumModel.findByIdAndUpdate(
+      await PensumModel.findByIdAndUpdate(
         createSubjectDto.pensumId,
         {
           $push: { subjects: newSubject._id },
         },
       );
-      await newSubject.save();
       return newSubject;
     } catch (error) {
       throw CustomError.internalServer(`${error}`);
@@ -39,7 +38,7 @@ export class SubjectService {
 
   async modifySubjectById(id: string, updateSubjectDto: UpdateSubjectDto) {
     const subject = await SubjectModel.findById(id);
-    if (!subject) throw CustomError.notFound(`Subject with id ${id} not found`);
+    if (!subject) return CustomError.notFound(`Subject with id ${id} not found`);
 
     try {
       return await SubjectModel.findByIdAndUpdate(id, updateSubjectDto.values, {
