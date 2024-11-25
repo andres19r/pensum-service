@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import {SubjectModel} from "./subject.model";
 
 const pensumSchema = new mongoose.Schema({
   career: {
@@ -14,6 +15,11 @@ const pensumSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: "Subject",
   }]
+})
+
+pensumSchema.pre('findOneAndDelete', async function() {
+  const doc = await this.model.findOne(this.getQuery());
+  await SubjectModel.deleteMany({pensumId: doc._id});
 })
 
 export const PensumModel = mongoose.model("Pensum", pensumSchema)

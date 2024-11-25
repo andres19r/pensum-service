@@ -48,7 +48,7 @@ export class PensumController {
   deletePensum = async (req: Request, res: Response) => {
     const id = req.params.id;
 
-    const deletedPensum = await PensumModel.findByIdAndDelete(id);
+    const deletedPensum = await PensumModel.findOneAndDelete({ _id: id });
     if (!deletedPensum)
       return res.status(404).json({ error: `Pensum with id ${id} not found` });
 
