@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { CreateSubjectDto } from "../../domain/dtos";
 import { SubjectService } from "../services";
 import { CustomError } from "../../domain/errors/custom-error";
+import { UpdateSubjectDto } from "../../domain/dtos/subject/update-subject.dto";
 
 export class SubjectController {
   constructor(private readonly subjectService: SubjectService) {}
@@ -41,10 +42,20 @@ export class SubjectController {
   };
 
   update = async (req: Request, res: Response) => {
-    return res.json("update");
+    const id = req.params.id;
+    const updateSubjectDto = UpdateSubjectDto.create(req.body);
+
+    this.subjectService
+      .modifySubjectById(id, updateSubjectDto)
+      .then((subject) => res.json(subject))
+      .catch((error) => this.handleError(error, res));
   };
 
   delete = async (req: Request, res: Response) => {
-    return res.json("delete");
+    const id = req.params.id;
+    this.subjectService
+      .deleteSubject(id)
+      .then(subject => res.json(subject))
+      .catch(error => this.handleError(error, res));
   };
 }

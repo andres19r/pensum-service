@@ -5,7 +5,6 @@ import { CustomError } from "../../domain/errors/custom-error";
 import { UpdateSubjectDto } from "../../domain/dtos/subject/update-subject.dto";
 
 export class SubjectService {
-
   async createSubject(createSubjectDto: CreateSubjectDto) {
     try {
       const newSubject = await SubjectModel.create(createSubjectDto);
@@ -16,12 +15,9 @@ export class SubjectService {
           `Pensum with id ${createSubjectDto.pensumId} not found`,
         );
 
-      await PensumModel.findByIdAndUpdate(
-        createSubjectDto.pensumId,
-        {
-          $push: { subjects: newSubject._id },
-        },
-      );
+      await PensumModel.findByIdAndUpdate(createSubjectDto.pensumId, {
+        $push: { subjects: newSubject._id },
+      });
       return newSubject;
     } catch (error) {
       throw CustomError.internalServer(`${error}`);
@@ -38,7 +34,8 @@ export class SubjectService {
 
   async modifySubjectById(id: string, updateSubjectDto: UpdateSubjectDto) {
     const subject = await SubjectModel.findById(id);
-    if (!subject) return CustomError.notFound(`Subject with id ${id} not found`);
+    if (!subject)
+      return CustomError.notFound(`Subject with id ${id} not found`);
 
     try {
       return await SubjectModel.findByIdAndUpdate(id, updateSubjectDto.values, {
@@ -50,6 +47,17 @@ export class SubjectService {
   }
 
   async deleteSubject(id: string) {
-    return SubjectModel.findByIdAndDelete(id);
+    const subject = await SubjectModel.findById(id);
+    if (!subject)
+      throw CustomError.notFound(`Subject with id ${id} not found`);
+
+    try {
+      await PensumModel.findByIdAndUpdate(subject.pensumId, {
+        $pull: { subjects: subject._id },
+      });
+      return SubjectModel.findByIdAndDelete(id);
+    } catch (error) {
+      throw CustomError.internalServer(`${error}`);
+    }
   }
 }

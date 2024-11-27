@@ -4,7 +4,7 @@ import { AppRoutes } from "./presentation/routes";
 import { Server } from "./presentation/server";
 
 (async () => {
-  main();
+  await main();
 })();
 
 async function main() {
@@ -18,5 +18,5 @@ async function main() {
     routes: AppRoutes.routes,
   });
 
-  server.start();
+  await server.start();
 }
