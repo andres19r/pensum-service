@@ -6,8 +6,8 @@ export class PensumController {
   constructor() {}
 
   getPensumInfo = async (req: Request, res: Response) => {
-    const pensumList = await PensumModel.find().populate("subjects");
-    res.json(pensumList);
+    const pensum = await PensumModel.findOne().populate("subjects");
+    return res.json(pensum);
   };
 
   createPensum = async (req: Request, res: Response) => {
