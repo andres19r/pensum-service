@@ -1,25 +1,29 @@
 import mongoose, { Schema } from "mongoose";
-import {SubjectModel} from "./subject.model";
+import { SubjectModel } from "./subject.model";
 
 const pensumSchema = new mongoose.Schema({
   career: {
     type: String,
     unique: true,
-    required: [true, "Career is required"]
+    required: [true, "Career is required"],
   },
   university: {
     type: String,
-    required: [true, "University is required"]
+    required: [true, "University is required"],
   },
-  subjects: [{
-    type: Schema.Types.ObjectId,
-    ref: "Subject",
-  }]
-})
+  subjects: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Subject",
+    },
+  ],
+});
 
-pensumSchema.pre('findOneAndDelete', async function() {
+pensumSchema.pre("findOneAndDelete", async function () {
   const doc = await this.model.findOne(this.getQuery());
-  await SubjectModel.deleteMany({pensumId: doc._id});
-})
+  if (doc) {
+    await SubjectModel.deleteMany({ pensumId: doc._id });
+  }
+});
 
-export const PensumModel = mongoose.model("Pensum", pensumSchema)
+export const PensumModel = mongoose.model("Pensum", pensumSchema);

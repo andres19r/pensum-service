@@ -1,5 +1,21 @@
 import express, { Router } from "express";
 import cors from "cors";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+
+const swaggerOptions = {
+  failOnErrors: true,
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Pensum Service",
+      version: "1.0.0",
+    },
+  },
+  apis: ["./src/presentation/**/*.ts"],
+};
+
+const swaggerSpecification = swaggerJSDoc(swaggerOptions);
 
 interface Options {
   port: number;
@@ -22,6 +38,8 @@ export class Server {
     this.app.use(cors());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.get("/api-docs", swaggerUi.setup(swaggerSpecification));
+    this.app.use("/api-docs", swaggerUi.serve);
 
     this.app.use(this.routes);
 
