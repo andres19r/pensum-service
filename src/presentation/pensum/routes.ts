@@ -69,6 +69,23 @@ export class PensumRoutes {
      *     summary: Modify the current pensum
      *     produces:
      *       - application/json
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               university:
+     *                 type: string
+     *                 description: The name of the university
+     *                 required: false
+     *                 example: UNANDES
+     *               career:
+     *                 type: string
+     *                 description: Then name of the career
+     *                 required: false
+     *                 example: Systems Engineering
      *     responses:
      *       200:
      *         description: Returns a pensum object
@@ -91,7 +108,7 @@ export class PensumRoutes {
      *       200:
      *         description: Returns a pensum object
      */
-    router.delete("/:id", controller.deletePensum);
+    router.delete("/", controller.deletePensum);
 
     return router;
   }

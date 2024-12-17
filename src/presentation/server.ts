@@ -3,7 +3,7 @@ import cors from "cors";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
-const swaggerOptions = {
+export const swaggerOptions = {
   failOnErrors: true,
   definition: {
     openapi: "3.0.0",
@@ -15,7 +15,7 @@ const swaggerOptions = {
   apis: ["./src/presentation/**/*.ts"],
 };
 
-const swaggerSpecification = swaggerJSDoc(swaggerOptions);
+export const swaggerSpecification = swaggerJSDoc(swaggerOptions);
 
 interface Options {
   port: number;
