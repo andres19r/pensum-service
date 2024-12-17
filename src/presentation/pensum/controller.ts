@@ -7,7 +7,7 @@ export class PensumController {
 
   getPensumInfo = async (req: Request, res: Response) => {
     const pensum = await PensumModel.findOne().populate("subjects");
-    return res.json(pensum);
+    return res.json(pensum ?? {});
   };
 
   createPensum = async (req: Request, res: Response) => {
@@ -46,11 +46,9 @@ export class PensumController {
   };
 
   deletePensum = async (req: Request, res: Response) => {
-    const id = req.params.id;
-
-    const deletedPensum = await PensumModel.findOneAndDelete({ _id: id });
+    const deletedPensum = await PensumModel.findOneAndDelete();
     if (!deletedPensum)
-      return res.status(404).json({ error: `Pensum with id ${id} not found` });
+      return res.status(404).json({ error: "There is not a pensum created" });
 
     res.json(deletedPensum);
   };
