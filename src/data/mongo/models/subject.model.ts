@@ -15,7 +15,7 @@ const subjectSchema = new mongoose.Schema({
   },
   state: {
     type: String,
-    default: "PENDING",
+    default: SubjectState.Pending,
     enum: SubjectState,
     required: true,
   },
