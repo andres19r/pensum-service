@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 export enum SubjectState {
   Approved = "APPROVED",
-  InProgress = "IN_PROGRESS",
+  InProgress = "IN PROGRESS",
   Pending = "PENDING",
   Reproved = "REPROVED",
 }
